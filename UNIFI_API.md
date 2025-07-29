@@ -241,34 +241,28 @@ Retrieves detailed information about a specific connected client.
 }
 ```
 
-### POST /v1/sites/{siteId}/clients/{clientId}/actions
+### POST /api/s/{site}/cmd/stamgr (Client Actions)
 
-Performs an action on a specific connected client.
+Performs various actions on client devices.
 
-- **Description:** Execute Client Action
+- **Description:** Client Actions (Block, Unblock, Authorize Guest, Unauthorize Guest, Reconnect, Forget)
 - **Method:** POST
-- **Path:** `/proxy/network/integration/v1/sites/{siteId}/clients/{clientId}/actions`
+- **Path:** `/api/s/{siteId}/cmd/stamgr`
 - **Path Parameters:**
     - `siteId` (string, required): The UUID of the site.
-    - `clientId` (string, required): The UUID of the client.
 - **Request Body (application/json):**
 ```json
 {
-  "action": "AUTHORIZE_GUEST_ACCESS", // Other actions like BLOCK/UNBLOCK might be available
-  "timeLimitMinutes": <integer, optional>,
-  "dataUsageLimitMBytes": <integer, optional>,
-  "rxRateLimitKbps": <integer, optional>,
-  "txRateLimitKbps": <integer, optional>
+  "cmd": "block-sta" | "unblock-sta" | "authorize-guest" | "unauthorize-guest" | "kick-sta" | "forget-sta",
+  "mac": "<client-mac-address>",
+  "minutes": <integer, optional>,
+  "up": <integer, optional>,
+  "down": <integer, optional>,
+  "bytes": <integer, optional>,
+  "ap_mac": "<string, optional>"
 }
 ```
-- **Response (200 OK):**
-```json
-{
-  "action": "AUTHORIZE_GUEST_ACCESS",
-  "revokedAuthorization": {},
-  "grantedAuthorization": {}
-}
-```
+- **Response (200 OK):** (Typically success, specific response varies by command)
 
 ### GET /v1/sites/{siteId}/hotspot/vouchers
 
