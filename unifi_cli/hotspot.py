@@ -75,6 +75,7 @@ def generate_vouchers(config, site_id, count, name, time_limit):
 @vouchers.command('delete')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--voucher-id', required=True, help='The ID of the voucher to delete.')
+@click.confirmation_option(prompt='Are you sure you want to delete this voucher?')
 @pass_config
 def delete_voucher(config, site_id, voucher_id):
     """Delete a specific Hotspot voucher."""

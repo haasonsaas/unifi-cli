@@ -65,6 +65,7 @@ def get_device(config, site_id, device_id, json, query):
 @devices.command('restart')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--device-id', required=True, help='The ID of the device to restart.')
+@click.confirmation_option(prompt='Are you sure you want to restart this device?')
 @pass_config
 def restart_device(config, site_id, device_id):
     """Restart a specific device."""
@@ -88,6 +89,7 @@ def restart_device(config, site_id, device_id):
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--device-id', required=True, help='The ID of the device.')
 @click.option('--port-idx', required=True, type=int, help='The index of the port to power cycle.')
+@click.confirmation_option(prompt='Are you sure you want to power cycle this port?')
 @pass_config
 def power_cycle_port(config, site_id, device_id, port_idx):
     """Power cycle a specific port on a device."""
