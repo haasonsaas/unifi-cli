@@ -1,5 +1,6 @@
 import click
 import json
+import jmespath
 
 def handle_api_error(response):
     """Parse and display a JSON error response from the API."""
@@ -16,3 +17,13 @@ def handle_api_error(response):
     except json.JSONDecodeError:
         click.echo(f"Error: {response.status_code} {response.reason}", err=True)
         click.echo(f"  Response: {response.text}", err=True)
+
+def print_json_output(data, raw_json=False, query=None):
+    """Prints JSON data, optionally unformatted or filtered by JMESPath."""
+    if query:
+        data = jmespath.search(query, data)
+
+    if raw_json:
+        click.echo(json.dumps(data))
+    else:
+        click.echo(json.dumps(data, indent=4))

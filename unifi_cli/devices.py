@@ -2,7 +2,7 @@ import click
 import requests
 import json
 from .config import pass_config
-from .util import handle_api_error
+from .util import handle_api_error, print_json_output
 
 @click.group()
 def devices():
@@ -12,8 +12,10 @@ def devices():
 @devices.command('list')
 @click.option('--site-id', required=True, help='The ID of the site to list devices for.')
 @click.option('--filter', help='Filter the results.')
+@click.option('--json', is_flag=True, help='Output raw JSON.')
+@click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def list_devices(config, site_id, filter):
+def list_devices(config, site_id, filter, json, query):
     """List all devices for a site."""
     headers = {
         'X-API-KEY': config.api_key,
@@ -29,15 +31,17 @@ def list_devices(config, site_id, filter):
             handle_api_error(response)
             return
         data = response.json()
-        click.echo(json.dumps(data, indent=4))
+        print_json_output(data, raw_json=json, query=query)
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)
 
 @devices.command('get')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--device-id', required=True, help='The ID of the device.')
+@click.option('--json', is_flag=True, help='Output raw JSON.')
+@click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def get_device(config, site_id, device_id):
+def get_device(config, site_id, device_id, json, query):
     """Get detailed information about a specific device."""
     headers = {
         'X-API-KEY': config.api_key,
@@ -49,7 +53,7 @@ def get_device(config, site_id, device_id):
             handle_api_error(response)
             return
         data = response.json()
-        click.echo(json.dumps(data, indent=4))
+        print_json_output(data, raw_json=json, query=query)
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)
 
@@ -101,8 +105,10 @@ def power_cycle_port(config, site_id, device_id, port_idx):
 @devices.command('get-latest-statistics')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--device-id', required=True, help='The ID of the device.')
+@click.option('--json', is_flag=True, help='Output raw JSON.')
+@click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def get_latest_statistics(config, site_id, device_id):
+def get_latest_statistics(config, site_id, device_id, json, query):
     """Retrieve the latest real-time statistics of a specific adopted device."""
     headers = {
         'X-API-KEY': config.api_key,
@@ -114,6 +120,6 @@ def get_latest_statistics(config, site_id, device_id):
             handle_api_error(response)
             return
         data = response.json()
-        click.echo(json.dumps(data, indent=4))
+        print_json_output(data, raw_json=json, query=query)
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)

@@ -2,11 +2,13 @@ import click
 import requests
 import json
 from .config import pass_config
-from .util import handle_api_error
+from .util import handle_api_error, print_json_output
 
 @click.command('info')
+@click.option('--json', is_flag=True, help='Output raw JSON.')
+@click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def info(config):
+def info(config, json, query):
     """Get Application Info."""
     headers = {
         'X-API-KEY': config.api_key,
@@ -18,6 +20,6 @@ def info(config):
             handle_api_error(response)
             return
         data = response.json()
-        click.echo(json.dumps(data, indent=4))
+        print_json_output(data, raw_json=json, query=query)
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)

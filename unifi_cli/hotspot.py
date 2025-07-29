@@ -2,7 +2,7 @@ import click
 import requests
 import json
 from .config import pass_config
-from .util import handle_api_error
+from .util import handle_api_error, print_json_output
 
 @click.group()
 def hotspot():
@@ -17,8 +17,10 @@ def vouchers():
 @vouchers.command('list')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--filter', help='Filter the results.')
+@click.option('--json', is_flag=True, help='Output raw JSON.')
+@click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def list_vouchers(config, site_id, filter):
+def list_vouchers(config, site_id, filter, json, query):
     """List all Hotspot vouchers for a site."""
     headers = {
         'X-API-KEY': config.api_key,
@@ -34,7 +36,7 @@ def list_vouchers(config, site_id, filter):
             handle_api_error(response)
             return
         data = response.json()
-        click.echo(json.dumps(data, indent=4))
+        print_json_output(data, raw_json=json, query=query)
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)
 
@@ -88,8 +90,10 @@ def delete_voucher(config, site_id, voucher_id):
 @vouchers.command('get')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--voucher-id', required=True, help='The ID of the voucher.')
+@click.option('--json', is_flag=True, help='Output raw JSON.')
+@click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def get_voucher(config, site_id, voucher_id):
+def get_voucher(config, site_id, voucher_id, json, query):
     """Retrieve details of a specific Hotspot voucher."""
     headers = {
         'X-API-KEY': config.api_key,
@@ -101,6 +105,6 @@ def get_voucher(config, site_id, voucher_id):
             handle_api_error(response)
             return
         data = response.json()
-        click.echo(json.dumps(data, indent=4))
+        print_json_output(data, raw_json=json, query=query)
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)
