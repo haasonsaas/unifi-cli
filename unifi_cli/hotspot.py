@@ -84,3 +84,23 @@ def delete_voucher(config, site_id, voucher_id):
         click.echo(json.dumps(data, indent=4))
     except requests.exceptions.RequestException as e:
         click.echo(f"Error: {e}", err=True)
+
+@vouchers.command('get')
+@click.option('--site-id', required=True, help='The ID of the site.')
+@click.option('--voucher-id', required=True, help='The ID of the voucher.')
+@pass_config
+def get_voucher(config, site_id, voucher_id):
+    """Retrieve details of a specific Hotspot voucher."""
+    headers = {
+        'X-API-KEY': config.api_key,
+        'Accept': 'application/json'
+    }
+    try:
+        response = requests.get(f"{config.url}/proxy/network/integration/v1/sites/{site_id}/hotspot/vouchers/{voucher_id}", headers=headers, verify=False)
+        if not response.ok:
+            handle_api_error(response)
+            return
+        data = response.json()
+        click.echo(json.dumps(data, indent=4))
+    except requests.exceptions.RequestException as e:
+        click.echo(f"Error: {e}", err=True)
