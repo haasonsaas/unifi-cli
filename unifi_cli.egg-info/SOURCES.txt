@@ -1,0 +1,9 @@
+setup.py
+unifi_cli/__init__.py
+unifi_cli/main.py
+unifi_cli.egg-info/PKG-INFO
+unifi_cli.egg-info/SOURCES.txt
+unifi_cli.egg-info/dependency_links.txt
+unifi_cli.egg-info/entry_points.txt
+unifi_cli.egg-info/requires.txt
+unifi_cli.egg-info/top_level.txt
