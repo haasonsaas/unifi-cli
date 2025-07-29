@@ -17,16 +17,21 @@ def vouchers():
 @vouchers.command('list')
 @click.option('--site-id', required=True, help='The ID of the site.')
 @click.option('--filter', help='Filter the results.')
+@click.option('--offset', type=int, default=0, help='Offset for pagination.')
+@click.option('--limit', type=int, default=100, help='Limit for pagination (max 1000).')
 @click.option('--json', is_flag=True, help='Output raw JSON.')
 @click.option('--query', help='JMESPath query to apply to the JSON output.')
 @pass_config
-def list_vouchers(config, site_id, filter, json, query):
+def list_vouchers(config, site_id, filter, offset, limit, json, query):
     """List all Hotspot vouchers for a site."""
     headers = {
         'X-API-KEY': config.api_key,
         'Accept': 'application/json'
     }
-    params = {}
+    params = {
+        'offset': offset,
+        'limit': limit
+    }
     if filter:
         params['filter'] = filter
 
